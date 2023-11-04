@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Check out the code from your GitHub repository
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: 'main']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [[url: 'https://github.com/ParidhiJ15/Website.git']]
+                ])
+            }
+        }
+
+        stage('Deploy to Apache') {
+            steps {
+                // Copy the code to the Apache document root directory
+                bat script: '''
+                    xcopy /s /e /y "C:\MY\databaseWesite.github.io" "C:\MY\httpd-2.4.58-win64-VS17 (1).zip\Apache24\htdocs"
+                '''
+            }
+        }
+    }
+}
